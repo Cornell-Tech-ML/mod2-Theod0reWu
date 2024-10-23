@@ -58,7 +58,7 @@ Result:
 ![image](https://github.com/user-attachments/assets/82c6a635-33bb-43ec-ac70-9103d0dc6fa9)
 
 ## XOR Dataset
-Datapoints: 50 
+Datapoints: 50 <br>
 Settings:
 * 16 hidden layers
 * 0.1 Learning Rate
