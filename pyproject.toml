@@ -74,6 +74,7 @@ exclude = [
     "**/docs/**/*",
 ]
 
+[tool.ruff.lint]
 ignore = [
     "ANN101",
     "ANN401",

@@ -38,7 +38,9 @@ class TensorOps:
         ...
 
     @staticmethod
-    def reduce(fn: Callable[[float, float], float], start: float = 0.0) -> Callable[[Tensor, int], Tensor]:
+    def reduce(
+        fn: Callable[[float, float], float], start: float = 0.0
+    ) -> Callable[[Tensor, int], Tensor]:
         """Creates a reduction function that applies a binary operation along a tensor dimension."""
         ...
 
@@ -181,7 +183,9 @@ class SimpleOps(TensorOps):
         return ret
 
     @staticmethod
-    def reduce(fn: Callable[[float, float], float], start: float = 0.0) -> Callable[["Tensor", int], "Tensor"]:
+    def reduce(
+        fn: Callable[[float, float], float], start: float = 0.0
+    ) -> Callable[["Tensor", int], "Tensor"]:
         """Higher-order tensor reduce function. ::
 
           fn_reduce = reduce(fn)
@@ -269,10 +273,9 @@ def tensor_map(
         in_shape: Shape,
         in_strides: Strides,
     ) -> None:
-        out_index: Index = np.array([0] * len(out_shape), dtype=np.int32)
-        in_index: Index = np.array([0] * len(in_shape), dtype=np.int32)
+        out_index = np.array([0] * len(out_shape), dtype=np.int32)
+        in_index = np.array([0] * len(in_shape), dtype=np.int32)
         for out_flat_idx in range(len(out)):
-
             to_index(out_flat_idx, out_shape, out_index)
             broadcast_index(out_index, out_shape, in_shape, in_index)
             in_flat_idx = index_to_position(in_index, in_strides)
@@ -323,9 +326,9 @@ def tensor_zip(
         b_shape: Shape,
         b_strides: Strides,
     ) -> None:
-        out_index: Index = np.array([0] * len(out_shape), dtype=np.int32)
-        a_index: Index = np.array([0] * len(a_shape), dtype=np.int32)
-        b_index: Index = np.array([0] * len(b_shape), dtype=np.int32)
+        out_index = np.array([0] * len(out_shape), dtype=np.int32)
+        a_index = np.array([0] * len(a_shape), dtype=np.int32)
+        b_index = np.array([0] * len(b_shape), dtype=np.int32)
 
         for out_flat_idx in range(len(out)):
             to_index(out_flat_idx, out_shape, out_index)
@@ -338,6 +341,7 @@ def tensor_zip(
             out[out_flat_idx] = fn(a_storage[a_flat_idx], b_storage[b_flat_idx])
 
     return _zip
+
 
 def tensor_reduce(
     fn: Callable[[float, float], float],
@@ -377,6 +381,7 @@ def tensor_reduce(
 
     return _reduce
 
+
 def tensor_reduce_broken(
     fn: Callable[[float, float], float],
 ) -> Callable[[Storage, Shape, Strides, Storage, Shape, Strides, int], None]:
@@ -406,7 +411,7 @@ def tensor_reduce_broken(
     ) -> None:
         if a_shape[reduce_dim] == 1:
             return
-        out_index: Index = np.array([0] * len(out_shape), dtype=np.int32)
+        out_index = np.array([0] * len(out_shape), dtype=np.int32)
         for out_flat_idx in range(len(out)):
             # get the out index
             to_index(out_flat_idx, out_shape, out_index)
