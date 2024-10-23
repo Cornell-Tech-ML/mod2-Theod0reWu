@@ -1,5 +1,6 @@
 from typing import Callable, Iterable, List, Tuple
 
+import minitorch
 import pytest
 from hypothesis import given
 from hypothesis.strategies import DataObject, data, lists, permutations
@@ -19,6 +20,12 @@ def test_create(t1: List[float]) -> None:
     for i in range(len(t1)):
         assert t1[i] == t2[i]
 
+@pytest.mark.task2_3
+def my_test() -> None:
+    t1 = tensor([1,2])
+    t2 = t1 / 5
+    for ind in t2._tensor.indices():
+        assert_close(t2[ind], t1[ind] / 5)
 
 @given(tensors())
 @pytest.mark.task2_3
@@ -31,7 +38,6 @@ def test_one_args(
     t2 = tensor_fn(t1)
     for ind in t2._tensor.indices():
         assert_close(t2[ind], base_fn(t1[ind]))
-
 
 @given(shaped_tensors(2))
 @pytest.mark.task2_3
@@ -47,6 +53,7 @@ def test_two_args(
         assert_close(t3[ind], base_fn(t1[ind], t2[ind]))
 
 
+
 @given(tensors())
 @pytest.mark.task2_4
 @pytest.mark.parametrize("fn", one_arg)
@@ -56,7 +63,6 @@ def test_one_derivative(
     """Test the gradient of a one-arg tensor function"""
     name, _, tensor_fn = fn
     grad_check(tensor_fn, t1)
-
 
 @given(data(), tensors())
 @pytest.mark.task2_4
@@ -185,7 +191,6 @@ def test_fromnumpy() -> None:
 
 
 # Student Submitted Tests
-
 
 @pytest.mark.task2_3
 def test_reduce_forward_one_dim() -> None:

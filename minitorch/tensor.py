@@ -94,6 +94,10 @@ class Tensor:
 
         self.f = backend
 
+        self.size = v.size
+        self.dims = v.dims
+
+
     def requires_grad_(self, x: bool) -> None:
         self.history = History()
 
@@ -194,6 +198,7 @@ class Tensor:
         # END CODE CHANGE (2021)
 
     def zeros(self, shape: Optional[UserShape] = None) -> Tensor:
+        """Create a tensor of zeros with the same shape as self."""
         def zero(shape: UserShape) -> Tensor:
             return Tensor.make(
                 [0.0] * int(operators.prod(shape)), shape, backend=self.backend
@@ -285,3 +290,90 @@ class Tensor:
 
     # Functions
     # TODO: Implement for Task 2.3.
+
+    def permute(self, *order: int) -> Tensor:
+        """Permute the tensor's dimensions"""
+        return Permute.apply(self, tensor(list(order)))
+
+    def __add__(self, b: TensorLike) -> Tensor:
+        return Add.apply(self, self._ensure_tensor(b))
+
+    def __radd__(self, b: TensorLike) -> Tensor:
+        return Add.apply(self._ensure_tensor(b), self)
+    
+    def __sub__(self, b: TensorLike) -> Tensor:
+        return Add.apply(self, Neg.apply(self._ensure_tensor(b)))
+
+    def __rsub__(self, b: TensorLike) -> Tensor:
+        return Neg.apply(self).__add__(self._ensure_tensor(b))
+    
+    def __mul__(self, b: TensorLike) -> Tensor:
+        return Mul.apply(self, self._ensure_tensor(b))
+    
+    def __rmul__(self, b: TensorLike) -> Tensor:
+        return Mul.apply(self._ensure_tensor(b), self)
+    
+    def __lt__(self, b: TensorLike) -> Tensor:
+        return LT.apply(self, self._ensure_tensor(b))
+
+    def __eq__(self, b: TensorLike) -> Tensor:
+        return EQ.apply(self, self._ensure_tensor(b))
+
+    def __gt__(self, b: TensorLike) -> Tensor:
+        return LT.apply(self._ensure_tensor(b), self)
+
+    def __neg__(self) -> Tensor:
+        return Neg.apply(self)
+    
+    NoneDim = -1
+
+    def all(self, dim: int | None = None) -> Tensor:
+        """Return a new tensor with 1 if all elements are True along the given dimension."""
+        if (dim is None):
+             return All.apply(self, Tensor.make([Tensor.NoneDim], (1,), backend=self.backend))
+        return All.apply(self, self._ensure_tensor(dim))
+
+    def is_close(self, b: TensorLike) -> Tensor:
+        """Return a new tensor with 1 if all elements are close to the corresponding elements in `b`."""
+        return IsClose.apply(self, self._ensure_tensor(b))
+    
+    def sigmoid(self) -> Tensor:
+        """Return a new tensor with the sigmoid of the input tensor."""
+        return Sigmoid.apply(self)
+
+    def relu(self) -> Tensor:
+        """Return a new tensor with the ReLU (Rectified Linear Unit) of the input tensor."""
+        return ReLU.apply(self)
+    
+    def log(self) -> Tensor:
+        """Return a new tensor with the natural logarithm of the input tensor."""
+        return Log.apply(self)
+    
+    def exp(self) -> Tensor:
+        """Return a new tensor with the exponential of the input tensor."""
+        return Exp.apply(self)
+
+    def mean(self, dim: int | None = None) -> Tensor:
+        """Return a new tensor with the mean of the input tensor along the given dimension."""
+        size = self.size
+        if (dim is not None):
+            size = self.shape[dim]
+
+        return self.sum(dim) / size
+    
+    def sum(self, dim: Optional[int] = None) -> Tensor:
+        """Return a new tensor with the sum of the input tensor along the given dimension."""
+        if dim is None:
+            return Sum.apply(self.contiguous().view(self.size), self._ensure_tensor(0))
+        else:
+            return Sum.apply(self, self._ensure_tensor(dim))
+    
+    def view(self, *order: int) -> Tensor:
+        """Return a new tensor with the same data as the input tensor but with the specified shape."""
+        if (len(order) ==  0):
+            return self._new(self._tensor)
+        return View.apply(self, tensor(list(order)))
+
+    def zero_grad_(self)-> None:
+        """Set all gradients to zero."""
+        self.grad = None
