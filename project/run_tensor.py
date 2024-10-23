@@ -19,7 +19,7 @@ class Linear(minitorch.Module):
         self.bias = RParam(out_features)
         self.in_features = in_features
         self.out_features = out_features
-    
+
     def forward(self, x: minitorch.Tensor):
         batch_size = x.shape[0]
         xt = (x.view(batch_size, self.in_features, 1) * self.weights.value).sum(1)

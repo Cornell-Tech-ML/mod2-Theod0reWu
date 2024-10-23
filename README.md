@@ -24,11 +24,11 @@ Settings:
 * 2 hidden layers
 * .05 Learning Rate
 * 500 epochs
-  
+
 Result:
 * 50/50 correct
 * Time per epoch: 0.060 seconds
-  
+
 ![image](https://github.com/user-attachments/assets/9d542fa3-8248-4eb9-bda1-124ccd95eba7)
 
 ## Diag Dataset
@@ -37,7 +37,7 @@ Settings:
 * 2 hidden layers
 * .1 Learning Rate
 * 500 epochs
-  
+
 Result:
 * 75/75 correct
 * Time per epoch: 0.086 seconds
@@ -50,7 +50,7 @@ Settings:
 * 12 hidden layers
 * 0.1 Learning Rate
 * 500 epochs
-  
+
 Result:
 * 49/50 correct
 * Time per epoch: .6 seconds
@@ -63,7 +63,7 @@ Settings:
 * 16 hidden layers
 * 0.1 Learning Rate
 * 500 epochs
-  
+
 Result:
 * 48/50 correct
 * Time per epoch: .978 seconds
