@@ -20,6 +20,14 @@ def test_create(t1: List[float]) -> None:
         assert t1[i] == t2[i]
 
 
+@pytest.mark.task2_3
+def my_test() -> None:
+    t1 = tensor([1, 2])
+    t2 = t1 / 5
+    for ind in t2._tensor.indices():
+        assert_close(t2[ind], t1[ind] / 5)
+
+
 @given(tensors())
 @pytest.mark.task2_3
 @pytest.mark.parametrize("fn", one_arg)
